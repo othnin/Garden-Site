@@ -1,0 +1,48 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+{% load static %}
+
+
+<h1>Weather Sensor Home Page</h1>
+
+  <div class="container-fluid">
+    <p>Resize the browser window to see the effect.</p>
+    <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
+    <div class="row">
+      {% for weather in weather_data %}
+      <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
+        <div class="card" style="width: 18rem;">
+          <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image" width="50" height="50">
+          <!--<img src="{% static 'images/cloud-sun.svg' %}" class="card-img-top" alt="..." width="50" height="50" >-->
+          <div class="card-body">
+            <h5 class="card-title">{{weather.city}}</h5>
+            <p class="card-text">{{weather.description}}</p>
+            <a href="{% url 'weathersensor_delete_city'  weather.city  %}" class="btn btn-primary">Remove City</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div>
+  <i class="bi bi-cloud-sun"></i>
+  </div>
+
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="field has-addons">
+        <div class="control is-expanded">
+            {{ form.name }}
+        </div>
+        <div class="control">
+            <button class="button is-info">
+                Add City
+            </button>
+        </div>
+    </div>
+</form>
+  
+{% endblock %}
