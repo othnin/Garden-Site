@@ -8,10 +8,7 @@ from .forms import CityForm
 
 
 def home(request):
-    print("weather sensor view home")
-
     city_deleted = request.GET.get('deleted', False)
-    print(city_deleted)
 
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid='+os.getenv("OPENWEATHER_KEY")
     cities = City.objects.all() #return all the cities in the database
@@ -54,8 +51,6 @@ def home(request):
 
 
 def deleteCity(request, id=None):
-    print('deletecity')
-    #city = get_object_or_404(City, name=id)
     try:
         city = City.objects.get(name=id)
     except City.DoesNotExist:

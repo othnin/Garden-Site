@@ -33,3 +33,14 @@ Pump - Connect your pump to a power source, run the black ground wire between sl
 
 This diagram should capture the correct GPIO so long as you are using Raspberry Pi 3. Not shown is another power source to the RPi. 
 
+
+
+## Running Web Stack
+docker-compose up
+docker-compose down
+http://127.0.0.1:8000
+
+## Issues/Features:
+
+Feature51524 - Currenlt in the weathersensor views whenever we remove a city it make an API call to the weather station when we should just read it from the DB
+

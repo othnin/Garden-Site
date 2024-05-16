@@ -4,3 +4,4 @@ Markdown
 gunicorn
 requests
 python-dotenv
+celery

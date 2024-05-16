@@ -13,7 +13,7 @@
       {% for weather in weather_data %}
       <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
         <div class="card" style="width: 18rem;">
-          <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image" width="50" height="50">
+          <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image">
           <!--<img src="{% static 'images/cloud-sun.svg' %}" class="card-img-top" alt="..." width="50" height="50" >-->
           <div class="card-body">
             <h5 class="card-title">{{weather.city}}</h5>
