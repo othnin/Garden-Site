@@ -5,3 +5,5 @@ gunicorn
 requests
 python-dotenv
 celery
+redis
+django-celery-beat

@@ -7,7 +7,46 @@ RUN apt-get update && \
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /app
-COPY requirements.txt /app
+COPY ./requirements.txt .
 RUN pip3 install -r requirements.txt
-COPY . /app
+
+#create dir for the app user
+RUN mkdir -p /home/app
+
+#create appropriate dir
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/mediafiles
+WORKDIR $APP_HOME
+
+
+RUN addgroup --system appgroup
+RUN adduser --system appuser
+RUN usermod -a -G appgroup appuser
+
+# copy project
+COPY . $APP_HOME
+COPY scripts/start-celerybeat.sh .
+RUN chmod +x ./start-celerybeat.sh
+
+COPY scripts/start-celeryworker.sh .
+RUN chmod +x ./start-celeryworker.sh
+
+COPY scripts/start-django.sh .
+RUN chmod +x ./start-django.sh
+
+
+RUN chown -R appuser:appgroup $APP_HOME
+USER appuser
+
+
+
+
+
+
+
+
+
+
