@@ -1,11 +1,30 @@
 {% extends "base_template.html" %}
 
 {% block content %}
+{% load static %}
 
 
 <h1>Garden Site Home</h1>
-<a  href="{% url 'watersensor_home' %}">Water Sensor</a>
-<a  href="{% url 'weathersensor_home' %}">Weather Sensor</a>
+
+<div class="container-fluid">
+    <p>Resize the browser window to see the effect.</p>
+    <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
+    <div class="row">
+      {% for weather in weather_data %}
+      <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
+        <div class="card" style="width: 18rem;">
+          <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image">
+          <!--<img src="{% static 'images/cloud-sun.svg' %}" class="card-img-top" alt="..." width="50" height="50" >-->
+          <div class="card-body">
+            <h5 class="card-title">{{weather.city}}</h5>
+            <p class="card-text">{{weather.description}}</p>
+            <p class="card-text">{{weather.temperature}} F</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
 
 
 {% endblock %}
