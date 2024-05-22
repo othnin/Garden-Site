@@ -6,9 +6,9 @@
   feather.replace({ 'aria-hidden': 'true' })
 
   // Graphs
-  const ctx = document.getElementById('myChart')
+  const ctx = document.getElementById('tempChart')
   // eslint-disable-next-line no-unused-vars
-  const myChart = new Chart(ctx, {
+  const tempChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: [
