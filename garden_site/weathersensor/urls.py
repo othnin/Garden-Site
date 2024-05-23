@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='weathersensor_home'),
-    path('deleteCity/<str:id>', views.deleteCity, name='weathersensor_delete_city'),
+    path('deleteCity/<str:city_name>', views.deleteCity, name='weathersensor_delete_city'),
+    path('getWeatherTemps/<str:city_name>', views.getWeatherTempData, name='weathersensor_get_weather_temps')
 ]

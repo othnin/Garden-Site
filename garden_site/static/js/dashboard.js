@@ -5,49 +5,42 @@
 
   feather.replace({ 'aria-hidden': 'true' })
 
-  // Graphs
-  const ctx = document.getElementById('tempChart')
-  // eslint-disable-next-line no-unused-vars
-  const tempChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday'
-      ],
-      datasets: [{
-        data: [
-          15339,
-          21345,
-          18483,
-          24003,
-          23489,
-          24092,
-          12034
-        ],
-        lineTension: 0,
-        backgroundColor: 'transparent',
-        borderColor: '#007bff',
-        borderWidth: 4,
-        pointBackgroundColor: '#007bff'
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: false
-          }
+  // Function to initialize the chart
+  function initChart(timeLabels, tempData) {
+    var config = {
+      type: 'line',
+      data: {
+        labels: timeLabels,
+        datasets: [{
+          data: tempData,
+          lineTension: 0,
+          backgroundColor: 'transparent',
+          borderColor: '#007bff',
+          borderWidth: 4,
+          pointBackgroundColor: '#007bff'
         }]
       },
-      legend: {
-        display: false
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        }
       }
     }
-  })
-})()
+
+    // Graphs
+    const ctx = document.getElementById('tempChart')
+    // eslint-disable-next-line no-unused-vars
+    const tempChart = new Chart(ctx, config)
+  }
+
+  // Expose the initChart function to the global scope
+  window.initChart = initChart;
+
+})();

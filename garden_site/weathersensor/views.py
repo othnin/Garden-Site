@@ -1,6 +1,7 @@
 import requests, os
-
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView
 from django.urls import reverse
 
 from .models import City, Weather
@@ -9,7 +10,6 @@ from .forms import CityForm
 
 def home(request):
     city_deleted = request.GET.get('deleted', False)
-
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid='+os.getenv("OPENWEATHER_KEY")
     cities = City.objects.all() #return all the cities in the database
 
@@ -26,14 +26,12 @@ def home(request):
     weather_data = []
     for city in cities:
         city_weather = requests.get(url.format(city)).json() #request the API data and convert the JSON to Python data types
-
         weather = {
             'city' : city,
             'temperature' : city_weather['main']['temp'],
             'description' : city_weather['weather'][0]['description'],
             'icon' : city_weather['weather'][0]['icon']
         }
-
         weather_data.append(weather) #add the data for the current city into our list for display
         w = Weather(city=city, main= city_weather['weather'][0]['main'], temp=city_weather['main']['temp'],
                             description=city_weather['weather'][0]['description'], feels_like=city_weather['main']['feels_like'],
@@ -44,15 +42,13 @@ def home(request):
                             )
         w.save()
 
-    
-
     context = {'weather_data' : weather_data, 'form' : form}
     return render(request, 'weathersensor_home.html', context)
 
 
-def deleteCity(request, id=None):
+def deleteCity(request, city_name=None):
     try:
-        city = City.objects.get(name=id)
+        city = City.objects.get(name=city_name)
     except City.DoesNotExist:
         return redirect('weathersensor_home')
     city.delete()
@@ -68,3 +64,15 @@ def deleteCity(request, id=None):
 
     context = {'weather_data' : weather_data}
     return redirect(reverse('weathersensor_home') + '?deleted=true')  #may not need URL parameters
+
+
+def getWeatherTempData(request, city_name):
+    # Get the city object based on the city name
+    city = get_object_or_404(City, name=city_name)
+    # Perform the query to get weather data for the specified city
+    weather_data = Weather.objects.filter(city=city).values('temp', 'time')
+    # Convert the queryset to a list
+    data = list(weather_data)
+    return JsonResponse(data, safe=False)
+        
+

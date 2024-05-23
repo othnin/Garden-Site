@@ -6,44 +6,40 @@
 
 <h1>Weather Sensor Home Page</h1>
 
-  <div class="container-fluid">
-    <p>Resize the browser window to see the effect.</p>
-    <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
-    <div class="row">
-      {% for weather in weather_data %}
-      <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
-        <div class="card" style="width: 18rem;">
-          <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image">
-          <!--<img src="{% static 'images/cloud-sun.svg' %}" class="card-img-top" alt="..." width="50" height="50" >-->
-          <div class="card-body">
-            <h5 class="card-title">{{weather.city}}</h5>
-            <p class="card-text">{{weather.description}}</p>
-            <a href="{% url 'weathersensor_delete_city'  weather.city  %}" class="btn btn-primary">Remove City</a>
-          </div>
+<div class="container-fluid">
+  <p>Resize the browser window to see the effect.</p>
+  <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
+  <div class="row">
+    {% for weather in weather_data %}
+    <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
+      <div class="card" style="width: 18rem;">
+        <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" class="card-img-top" alt="Image">
+        <!--<img src="{% static 'images/cloud-sun.svg' %}" class="card-img-top" alt="..." width="50" height="50" >-->
+        <div class="card-body">
+          <h5 class="card-title">{{weather.city}}</h5>
+          <p class="card-text">{{weather.description}}</p>
+          <a href="{% url 'weathersensor_delete_city'  weather.city  %}" class="btn btn-primary">Remove City</a>
         </div>
       </div>
-      {% endfor %}
     </div>
+    {% endfor %}
   </div>
+</div>
 
-  <div>
-  <i class="bi bi-cloud-sun"></i>
+<form method="POST">
+  {% csrf_token %}
+  <div class="field has-addons">
+      <div class="control is-expanded">
+          {{ form.name }}
+      </div>
+      <div class="control">
+          <button class="button is-info">
+              Add City
+          </button>
+      </div>
   </div>
-
-
-  <form method="POST">
-    {% csrf_token %}
-    <div class="field has-addons">
-        <div class="control is-expanded">
-            {{ form.name }}
-        </div>
-        <div class="control">
-            <button class="button is-info">
-                Add City
-            </button>
-        </div>
-    </div>
 </form>
+
 <style>
   .bd-placeholder-img {
     font-size: 1.125rem;
@@ -97,6 +93,77 @@
   }
 </style>
 
- <canvas class="my-4 w-100" id="tempChart" width="900" height="380"></canvas> 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+{% for weather in weather_data %}
+<script>
+  $.ajax({
+    type: 'GET',
+    url: '/weathersensor/getWeatherTemps/{{ weather.city }}',
+    success: function(response) {
+      
+      function convertTimeToReadableFormat(timeString) {
+        const date = new Date(timeString);
+        return date.toLocaleString('en-US', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+      }
+
+      // Function to select most evenly distributed elements
+      function selectEvenlyDistributed(data, maxElements) {
+          // Sort data by time
+          data.sort((a, b) => new Date(a.time) - new Date(b.time));
+          // Calculate the interval between elements
+          const interval = Math.floor(data.length / maxElements);
+          // Select elements at regular intervals
+          const selectedData = [];
+          for (let i = 0; i < data.length; i += interval) {
+              selectedData.push(data[i]);
+          }
+          // Ensure we do not exceed the maxElements count
+          if (selectedData.length > maxElements) {
+              selectedData.length = maxElements;
+          }
+          return selectedData;
+      }
+
+      // Maximum number of elements to select
+      const maxElements = 12;
+
+      // Get the most evenly distributed data
+      const evenlyDistributedData = selectEvenlyDistributed(response, maxElements);
+
+      // Convert times to human-readable format
+      const time = [];
+      const temps = [];
+      evenlyDistributedData.forEach(item => {
+          time.push(convertTimeToReadableFormat(item.time));
+          temps.push(item.temp);
+      });
+      console.log('Time:', time);
+      console.log('Temps:', temps);
+      // Call the initChart function with the retrieved data
+      if (typeof initChart === 'function') {
+        initChart(time, temps);
+      } else {
+        console.error('initChart function is not defined');
+      }
+
+    },
+    error: function(error) {
+      console.error(error) 
+    }
+  })
+</script>
+
+<h2>{{ weather.city }}</h2>
+<canvas class="my-4 w-100" id="tempChart" width="900" height="380"></canvas> 
+<hr>
+{% endfor %}
+ 
   
 {% endblock %}
