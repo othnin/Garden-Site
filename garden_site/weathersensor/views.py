@@ -76,3 +76,12 @@ def getWeatherTempData(request, city_name):
     return JsonResponse(data, safe=False)
         
 
+def getWeatherMostData(request, city_name):
+    # Get the city object based on the city name
+    city = get_object_or_404(City, name=city_name)
+    # Perform the query to get weather data for the specified city
+    weather_data = Weather.objects.filter(city=city).values('time','temp', 'feels_like', 'temp_min','temp_max', 'humidity','wind_speed','description')
+    # Convert the queryset to a list
+    data = list(weather_data)
+    return JsonResponse(data, safe=False)
+

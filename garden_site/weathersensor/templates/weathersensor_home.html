@@ -95,75 +95,152 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 {% for weather in weather_data %}
-<script>
-  $.ajax({
-    type: 'GET',
-    url: '/weathersensor/getWeatherTemps/{{ weather.city }}',
-    success: function(response) {
-      
-      function convertTimeToReadableFormat(timeString) {
-        const date = new Date(timeString);
-        return date.toLocaleString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-      }
+  <script>
+    $(document).ready(function() {
+      $.ajax({
+        type: 'GET',
+        url: '/weathersensor/getWeatherTemps/{{ weather.city }}',
+        success: function(response) {
 
-      // Function to select most evenly distributed elements
-      function selectEvenlyDistributed(data, maxElements) {
-          // Sort data by time
-          data.sort((a, b) => new Date(a.time) - new Date(b.time));
-          // Calculate the interval between elements
-          const interval = Math.floor(data.length / maxElements);
-          // Select elements at regular intervals
-          const selectedData = [];
-          for (let i = 0; i < data.length; i += interval) {
+          function convertTimeToReadableFormat(timeString) {
+            const date = new Date(timeString);
+            return date.toLocaleString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            });
+          }
+          // Function to select most evenly distributed elements
+          function selectEvenlyDistributed(data, maxElements) {
+            // Sort data by time
+            data.sort((a, b) => new Date(a.time) - new Date(b.time));
+            // Calculate the interval between elements
+            const interval = Math.floor(data.length / maxElements);
+            // Select elements at regular intervals
+            const selectedData = [];
+            for (let i = 0; i < data.length; i += interval) {
               selectedData.push(data[i]);
-          }
-          // Ensure we do not exceed the maxElements count
-          if (selectedData.length > maxElements) {
+            }
+            // Ensure we do not exceed the maxElements count
+            if (selectedData.length > maxElements) {
               selectedData.length = maxElements;
+            }
+            return selectedData;
           }
-          return selectedData;
-      }
+          // Maximum number of elements to select
+          const maxElements = 12;
+          // Get the most evenly distributed data
+          const evenlyDistributedData = selectEvenlyDistributed(response, maxElements);
+          // Convert times to human-readable format
+          const time = [];
+          const temps = [];
+          evenlyDistributedData.forEach(item => {
+            time.push(convertTimeToReadableFormat(item.time));
+            temps.push(item.temp);
+          });
 
-      // Maximum number of elements to select
-      const maxElements = 12;
+          // Generate a unique ID for the new chart
+          const chartId = 'tempChart_{{ forloop.counter }}';
+          // Call the initChart function with the retrieved data and unique ID
+          if (typeof initChart === 'function') {
+            initChart(time, temps, chartId);
+          } else {
+            console.error('initChart function is not defined');
+          }
 
-      // Get the most evenly distributed data
-      const evenlyDistributedData = selectEvenlyDistributed(response, maxElements);
-
-      // Convert times to human-readable format
-      const time = [];
-      const temps = [];
-      evenlyDistributedData.forEach(item => {
-          time.push(convertTimeToReadableFormat(item.time));
-          temps.push(item.temp);
+        },
+        error: function(error) {
+          console.error(error);
+        }
       });
-      console.log('Time:', time);
-      console.log('Temps:', temps);
-      // Call the initChart function with the retrieved data
-      if (typeof initChart === 'function') {
-        initChart(time, temps);
-      } else {
-        console.error('initChart function is not defined');
-      }
+    });
+  </script>
 
-    },
-    error: function(error) {
-      console.error(error) 
-    }
-  })
+  <h2>{{ weather.city }}</h2>
+  <h3> Temperature Chart</h3>
+  <canvas class="my-4 w-100" id="tempChart_{{ forloop.counter }}" width="900" height="380"></canvas>
+  <hr>
+{% endfor %}
+
+{% for weather in weather_data %}
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      type: 'GET',
+      url: '/weathersensor/getWeatherData/{{ weather.city }}',
+      success: function(response) {
+
+        function convertTimeToReadableFormat(timeString) {
+          const date = new Date(timeString);
+          return date.toLocaleString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          });
+        }
+
+        const modifiedWeather = response.map(obj => {
+          return {
+            ...obj,
+            time: convertTimeToReadableFormat(obj.time)
+          };
+        });
+
+        // Find the table body in the current context
+        //const tableBody = $('{{ weather.city }}-table-body');
+        const tableBody = $('#{{ weather.city }}-table-body');
+        console.log(modifiedWeather[0].time)
+        // Iterate over modifiedWeather and append rows to the table body
+        modifiedWeather.forEach(weatherData => {
+          const tableRow = `
+            <tr>
+              <td>${weatherData.time}</td>
+              <td>${weatherData.temp}</td>
+              <td>${weatherData.feels_like}</td>
+              <td>${weatherData.temp_min}</td>
+              <td>${weatherData.temp_max}</td>
+              <td>${weatherData.humidity}</td>
+              <td>${weatherData.wind_speed}</td>
+              <td>${weatherData.description}</td>
+            </tr>
+          `;
+          tableBody.append(tableRow);
+        });
+      },
+      error: function(error) {
+          console.error(error);
+      }
+    });
+  });
 </script>
 
 <h2>{{ weather.city }}</h2>
-<canvas class="my-4 w-100" id="tempChart" width="900" height="380"></canvas> 
-<hr>
-{% endfor %}
- 
+<h3>Temperature Table</h3>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Temperature</th>
+        <th scope="col">Feels Like</th>
+        <th scope="col">Temp Min</th>
+        <th scope="col">Temp Max</th>
+        <th scope="col">Humidity</th>
+        <th scope="col">Wind Speed</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody id="{{ weather.city }}-table-body">
+      <!-- Rows will be appended here by JavaScript -->
+    </tbody>
+  </table>
+</div>
+{% endfor %}       
   
 {% endblock %}

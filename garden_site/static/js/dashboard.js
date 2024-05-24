@@ -6,7 +6,7 @@
   feather.replace({ 'aria-hidden': 'true' })
 
   // Function to initialize the chart
-  function initChart(timeLabels, tempData) {
+  function initChart(timeLabels, tempData, elementId) {
     var config = {
       type: 'line',
       data: {
@@ -35,12 +35,13 @@
     }
 
     // Graphs
-    const ctx = document.getElementById('tempChart')
+    const ctx = document.getElementById(elementId).getContext('2d');
     // eslint-disable-next-line no-unused-vars
-    const tempChart = new Chart(ctx, config)
+    const tempChart = new Chart(ctx, config);
   }
 
   // Expose the initChart function to the global scope
   window.initChart = initChart;
 
 })();
+
