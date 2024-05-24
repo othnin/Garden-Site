@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
-    'watersensor',
+    'arduinosensor',
     'weathersensor'
 ]
 
