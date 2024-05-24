@@ -41,6 +41,13 @@
 </form>
 
 <style>
+  .table-wrapper {
+    max-height: 200px;
+    overflow: auto;
+    display:inline-block;
+    
+  }
+
   .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -222,7 +229,7 @@
 
 <h2>{{ weather.city }}</h2>
 <h3>Temperature Table</h3>
-<div class="table-responsive">
+<div class="table-responsive table-wrapper w-100">
   <table class="table table-striped table-sm">
     <thead>
       <tr>
