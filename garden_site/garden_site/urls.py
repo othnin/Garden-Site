@@ -19,7 +19,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('arduinosensor/', include('arduinosensor.urls')),
+    path('pisensors/', include('pisensors.urls')),
     path('weathersensor/', include('weathersensor.urls')),
     path('admin/', admin.site.urls),
 ]

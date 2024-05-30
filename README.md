@@ -21,7 +21,7 @@ Garden website with hardware (Raspberry PI, Arduino, Django, Python)
 
 ## Wiring for Arduino
 
-![Wiring for Arduino, Soil Sensor and Water Pump](arduino_wiring.png)
+![Wiring for Arduino, Soil Sensor and Water Pump](pi_wiring.png)
 
 
 

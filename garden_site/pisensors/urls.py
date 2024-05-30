@@ -3,5 +3,5 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='arduinosensorhome'),
+    path('', views.home, name='pisensor_home'),
 ]
