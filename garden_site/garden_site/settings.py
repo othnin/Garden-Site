@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
-    'arduinosensor',
+    'raspberry_sensor',
     'weathersensor'
 ]
 
@@ -153,3 +153,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
+CHANNEL_LAYERS = {
+ "default": {
+    "BACKEND": "asgi_redis.RedisChannelLayer",
+    "CONFIG": {
+       "hosts":[os.environ.get('REDIS_URL','redis://localhost:6379')],
+ },
+ "ROUTING": "sensor.routing.channel_routing",
+ },
+}
