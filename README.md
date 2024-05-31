@@ -1,5 +1,6 @@
 # Garden-Site
-Garden website with hardware (Raspberry PI, Arduino, Django, Python)
+Garden website with hardware (Raspberry PI, Django, Python)
+This can only be run on a Raspberry PI
 
 
 
@@ -36,11 +37,16 @@ This diagram should capture the correct GPIO so long as you are using Raspberry 
 
 
 ## Running Web Stack
+
+docker-compose build
+
 docker-compose up
+
 docker-compose down
+
 http://127.0.0.1:8000
 
 ## Issues/Features:
 
-Feature51524 - Currenlt in the weathersensor views whenever we remove a city it make an API call to the weather station when we should just read it from the DB
+Feature51524 - Currently in the weathersensor views whenever we remove a city it make an API call to the weather station when we should just read it from the DB
 

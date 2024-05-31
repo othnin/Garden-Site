@@ -4,7 +4,6 @@ from django.shortcuts import render
 from weathersensor.models import City, Weather
 
 def home(request):
-    print("garden_site home view")
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid='+os.getenv("OPENWEATHER_KEY")
     cities = City.objects.all() #return all the cities in the database
 
