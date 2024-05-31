@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import os
-import pisensors.utils.water
+from .utils import water
 
 
 # Create your views here.

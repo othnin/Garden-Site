@@ -3,49 +3,51 @@ import RPi.GPIO as GPIO
 import datetime
 import time
 
-init = False
+
 
 GPIO.setmode(GPIO.BOARD) # Broadcom pin-numbering scheme
+PUMP_PIN = 7
+WATER_SENSOR_PIN = 8
 
 def get_last_watered():
     try:
         f = open("last_watered.txt", "r")
         return f.readline()
     except:
-        return "NEVER!"
+        return 0
       
-def get_status(pin = 8):
-    GPIO.setup(pin, GPIO.IN) 
-    return GPIO.input(pin)
+def get_status():
+    GPIO.setup(WATER_SENSOR_PIN, GPIO.IN) 
+    return GPIO.input(WATER_SENSOR_PIN)
 
-def init_output(pin):
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
-    GPIO.output(pin, GPIO.HIGH)
+def init_output():
+    GPIO.setup(WATER_SENSOR_PIN, GPIO.OUT)
+    GPIO.output(WATER_SENSOR_PIN, GPIO.LOW)
+    GPIO.output(WATER_SENSOR_PIN, GPIO.HIGH)
     
-def auto_water(delay = 5, pump_pin = 7, water_sensor_pin = 8):
+def auto_water(delay = 5):
     consecutive_water_count = 0
-    init_output(pump_pin)
+    init_output(PUMP_PIN)
     print("Here we go! Press CTRL+C to exit")
     try:
         while 1 and consecutive_water_count < 10:
             time.sleep(delay)
-            wet = get_status(pin = water_sensor_pin) == 0
+            wet = get_status(pin = WATER_SENSOR_PIN) == 0
             if not wet:
                 if consecutive_water_count < 5:
-                    pump_on(pump_pin, 1)
+                    pump_on(PUMP_PIN, 1)
                 consecutive_water_count += 1
             else:
                 consecutive_water_count = 0
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-        GPIO.cleanup() # cleanup all GPI
+        GPIO.cleanup() 
 
-def pump_on(pump_pin = 7, delay = 1):
-    init_output(pump_pin)
+def pump_on():
+    init_output(PUMP_PIN)
     f = open("last_watered.txt", "w")
-    f.write("Last watered {}".format(datetime.datetime.now()))
+    f.write("Last watered {}\n".format(datetime.datetime.now()))
     f.close()
-    GPIO.output(pump_pin, GPIO.LOW)
+    GPIO.output(PUMP_PIN, GPIO.LOW)
     time.sleep(1)
-    GPIO.output(pump_pin, GPIO.HIGH)
+    GPIO.output(PUMP_PIN, GPIO.HIGH)
     
