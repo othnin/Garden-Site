@@ -8,10 +8,11 @@ import time
 GPIO.setmode(GPIO.BOARD) # Broadcom wwpin-numbering scheme
 PUMP_PIN = 7
 WATER_SENSOR_PIN = 8
+WATER_DURATION = 5
 
 def get_last_watered():
     try:
-        f = open("last_watered.txt", "r")
+        f = open("../data/last_watered.txt", "r")
         return f.readline()
     except:
         return 0
@@ -25,15 +26,14 @@ def init_output():
     GPIO.output(PUMP_PIN, GPIO.LOW)
     GPIO.output(PUMP_PIN, GPIO.HIGH)
     
-def auto_water(delay = 5):
+def auto_water(WATER_DURATION = 5):
     consecutive_water_count = 0
     init_output()
     print("Here we go! Press CTRL+C to exit")
     try:
         while 1 and consecutive_water_count < 10:
-            time.sleep(delay)
+            time.sleep(WATER_DURATION)
             wet = get_status()
-            print(wet)
             if not wet:
                 if consecutive_water_count < 5:
                     pump_on()
@@ -43,13 +43,13 @@ def auto_water(delay = 5):
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         GPIO.cleanup() 
 
-def pump_on():
+def pump_on(WATER_DURATION = 1):
     init_output()
-    f = open("last_watered.txt", "w")
-    f.write("Last watered {}\n".format(datetime.datetime.now()))
+    f = open("../data/last_watered.txt", "w")
+    f.write(f"{format(datetime.datetime.now())} {WATER_DURATION}")
     f.close()
     GPIO.output(PUMP_PIN, GPIO.LOW)
-    time.sleep(1)
+    time.sleep(WATER_DURATION)
     GPIO.output(PUMP_PIN, GPIO.HIGH)
     
 

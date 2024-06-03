@@ -1,3 +1,14 @@
 from django.db import models
+from django.utils import timezone
 
-# Create your models here.
+class Water(models.Model):
+    time = models.DateTimeField(auto_now_add=True)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        #return f'{self.time}: {self.amount} gallons'
+        return f'{self.time}'
+
+    class Meta:
+        verbose_name_plural = 'water'
+
