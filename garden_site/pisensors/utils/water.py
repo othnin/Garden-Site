@@ -45,8 +45,8 @@ def auto_water(WATER_DURATION = 5):
 
 def pump_on(WATER_DURATION = 1):
     init_output()
-    f = open("../data/last_watered.txt", "w")
-    f.write(f"{format(datetime.datetime.now())} {WATER_DURATION}")
+    f = open("../data/last_watered.txt", "a")
+    f.write(format(datetime.datetime.now()) + " " + str(WATER_DURATION)+ '\n')
     f.close()
     GPIO.output(PUMP_PIN, GPIO.LOW)
     time.sleep(WATER_DURATION)
