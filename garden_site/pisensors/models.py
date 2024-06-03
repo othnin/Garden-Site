@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 class Water(models.Model):
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True, unique=True)
     amount = models.IntegerField()
 
     def __str__(self):
