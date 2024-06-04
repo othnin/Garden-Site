@@ -63,3 +63,5 @@ http://127.0.0.1:8000
 
 Feature51524 - Currently in the weathersensor views whenever we remove a city it make an API call to the weather station when we should just read it from the DB
 
+Feature6424 - Implement websocket and channels to communicate with PI code.
+
