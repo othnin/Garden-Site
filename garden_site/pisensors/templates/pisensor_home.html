@@ -4,12 +4,55 @@
 {% load static %}
 
 
-<h1>Raspberry PI Sensor Home Page</h1>
-{% for watering in waterings %}
-    <p>Time: {{ watering.time }}, Amount: {{ watering.amount }}</p>
-{% empty %}
-    <p>No waterings found.</p>
-{% endfor %}
+<h1>Raspberry PI Water Sensor Home Page</h1>
+<hr>
+{% if water_status == 1 %}
+  <h3>Water Sensor: Wet</h3>
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-tree" viewBox="0 0 16 16">
+    <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507"/>
+  </svg>
+{% else %}
+<h3>Water Sensor: Dry</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" class="bi bi-tree" viewBox="0 0 16 16">
+    <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507"/>
+  </svg>
+{% endif %}
+<a href="{% url 'water_pump_on' %}" class="btn btn-primary">Turn On Water Pump</a>
 
+<hr>
+<h3>Watering History</h3>
+<div class="table-responsive table-wrapper w-100">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Amount (sec)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for watering in waterings %}
+        <tr>
+            <td> {{ watering.time }} </td>
+            <td> {{ watering.amount }} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+<hr>
+<h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16">
+  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+</svg>
+Auto Watering Status</h3>
+
+{% if auto_water_running %}
+  <p>Auto watering on</p>
+  <a href="{% url 'auto_water' 'off' %}" class="btn btn-primary">Turn Off Auto Watering</a>
+{% else %}
+  <p>Auto watering off</p>
+  <a href="{% url 'auto_water' 'on' %}" class="btn btn-primary">Turn On Auto Watering</a>
+{% endif %}
 
 {% endblock %}

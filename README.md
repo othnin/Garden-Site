@@ -35,6 +35,11 @@ Pump - Connect your pump to a power source, run the black ground wire between sl
 This diagram should capture the correct GPIO so long as you are using Raspberry Pi 3. Not shown is another power source to the RPi. 
 
 
+## Website Views
+
+After the page it up and running you should have pages, The Home overview page, a weather sensor page that has weather for different cities you can add, and a Raspberry PI sensor page that currently has a water sensor and pump.
+
+
 
 ## Running Web Stack
 

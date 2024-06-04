@@ -12,6 +12,7 @@ def home(request):
     city_deleted = request.GET.get('deleted', False)
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid='+os.getenv("OPENWEATHER_KEY")
     cities = City.objects.all() #return all the cities in the database
+    city_names = [city.name for city in cities]
 
     if request.method == 'POST':
         form = CityForm(request.POST)
@@ -43,7 +44,7 @@ def home(request):
                                 )
             w.save()
 
-    context = {'weather_data' : weather_data, 'form' : form}
+    context = {'weather_data' : weather_data, 'form' : form, 'city_names': city_names}
     return render(request, 'weathersensor_home.html', context)
 
 

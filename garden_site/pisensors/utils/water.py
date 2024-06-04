@@ -9,10 +9,11 @@ GPIO.setmode(GPIO.BOARD) # Broadcom wwpin-numbering scheme
 PUMP_PIN = 7
 WATER_SENSOR_PIN = 8
 WATER_DURATION = 5
+PATH = "pisensors/data/last_watered.txt"
 
 def get_last_watered():
     try:
-        f = open("../data/last_watered.txt", "r")
+        f = open(PATH, "r")
         return f.readline()
     except:
         return 0
@@ -45,7 +46,7 @@ def auto_water(WATER_DURATION = 5):
 
 def pump_on(WATER_DURATION = 1):
     init_output()
-    f = open("../data/last_watered.txt", "a")
+    f = open(PATH, "a")
     f.write(format(datetime.datetime.now()) + " " + str(WATER_DURATION)+ '\n')
     f.close()
     GPIO.output(PUMP_PIN, GPIO.LOW)

@@ -2,6 +2,7 @@
 import requests, os
 from django.shortcuts import render
 from weathersensor.models import City, Weather
+from pisensors.utils import water
 
 def home(request):
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid='+os.getenv("OPENWEATHER_KEY")
@@ -26,7 +27,8 @@ def home(request):
                                 wind_deg=city_weather['wind']['deg'], sunrise = city_weather['sys']['sunrise'], sunset = city_weather['sys']['sunset']
                         )
             w.save()
+    water_status = water.get_status()
 
-    context = {'weather_data' : weather_data}
+    context = {'weather_data' : weather_data, 'water_status': water_status,}
 
     return render(request, 'home.html', context)

@@ -7,4 +7,5 @@ python-dotenv
 celery
 redis
 django-celery-beat
+psutil
 RPi.GPIO

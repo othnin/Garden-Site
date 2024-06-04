@@ -7,8 +7,6 @@
 <h1>Weather Sensor Home Page</h1>
 
 <div class="container-fluid">
-  <p>Resize the browser window to see the effect.</p>
-  <p>The columns will automatically stack on top of each other when the screen is less than 768px wide.</p>
   <div class="row">
     {% for weather in weather_data %}
     <div class="col-sm-4 d-flex justify-content-center" style="background-color:lavender;">
@@ -101,12 +99,13 @@
 </style>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-{% for weather in weather_data %}
+{% for city in city_names %}
+
   <script>
     $(document).ready(function() {
       $.ajax({
         type: 'GET',
-        url: '/weathersensor/getWeatherTemps/{{ weather.city }}',
+        url: '/weathersensor/getWeatherTemps/{{ city }}',
         success: function(response) {
 
           function convertTimeToReadableFormat(timeString) {
@@ -129,6 +128,7 @@
             // Select elements at regular intervals
             const selectedData = [];
             for (let i = 0; i < data.length; i += interval) {
+              console.log(data[i])
               selectedData.push(data[i]);
             }
             // Ensure we do not exceed the maxElements count
@@ -166,7 +166,7 @@
     });
   </script>
 
-  <h2>{{ weather.city }}</h2>
+  <h2>{{ city }}</h2>
   <h3> Temperature Chart</h3>
   <canvas class="my-4 w-100" id="tempChart_{{ forloop.counter }}" width="900" height="380"></canvas>
   <hr>
