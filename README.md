@@ -22,7 +22,7 @@ This can only be run on a Raspberry PI
 
 ## Wiring for Arduino
 
-![Wiring for Arduino, Soil Sensor and Water Pump](pi_wiring.png)
+![Wiring for Arduino, Soil Sensor and Water Pump](docs/pi_wiring.png)
 
 
 
@@ -39,7 +39,15 @@ This diagram should capture the correct GPIO so long as you are using Raspberry 
 
 After the page it up and running you should have pages, The Home overview page, a weather sensor page that has weather for different cities you can add, and a Raspberry PI sensor page that currently has a water sensor and pump.
 
+![Garden Site Home page](docs/gardensite_home.png)
 
+![Rapberri PI Page](docs/PI_homepage.png)
+
+![Weather Page 1](docs/weather_page1.png)
+
+![Weather Page 2](docs/weather_page2.png)
+
+![Weather Page 3](docs/weather_page3.png)
 
 ## Running Web Stack
 
