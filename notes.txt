@@ -1,9 +1,0 @@
-For those of you using the new red sparkfun sensor that is linked in this project, you have to change some line of code to make it work. He did not use this sensor in his tutorial video. In water.py you have to change wet to equal 1 instead of 0. The sensor reads different than his. 1 is wet and 0 is not. You also have to edit web_plants.py and change the 1 to a 0 on line 33
-
-
-
-
-https://github.com/frantisekbrabec/auto-waterer/?tab=readme-ov-file
-
-
-Analog-Digital Converter ADS1115
